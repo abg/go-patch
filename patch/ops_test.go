@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.com/cppforlife/go-patch/patch"
+	. "github.com/abg/go-patch/patch"
 )
 
 var _ = Describe("Ops.Apply", func() {
