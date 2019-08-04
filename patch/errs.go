@@ -22,8 +22,18 @@ func NewOpMapMismatchTypeErr(path Pointer, obj interface{}) OpMismatchTypeErr {
 }
 
 func (e OpMismatchTypeErr) Error() string {
-	errMsg := "Expected to find %s at path '%s' but found '%T'"
-	return fmt.Sprintf(errMsg, e.Type_, e.Path, e.Obj)
+	errMsg := "Expected to find %s at path '%s' but found '%s'"
+
+	var typeName string
+
+	switch kind := reflect.ValueOf(e.Obj).Kind(); kind {
+	case reflect.Slice:
+		typeName = "array"
+	default:
+		typeName = fmt.Sprintf("%T", e.Obj)
+	}
+
+	return fmt.Sprintf(errMsg, e.Type_, e.Path, typeName)
 }
 
 type OpMissingMapKeyErr struct {
@@ -61,7 +71,7 @@ type OpMissingIndexErr struct {
 }
 
 func (e OpMissingIndexErr) Error() string {
-	return fmt.Sprintf("Expected to find array index '%d' but found array of length '%d' for path '%s'", e.Idx, e.Obj.Len(), e.Path)
+	return fmt.Sprintf("Expected to find array index '[%d]' but '%s' only has an array of length '%d'", e.Idx, e.Path, e.Obj.Len())
 }
 
 type OpMultipleMatchingIndexErr struct {
